@@ -8,7 +8,7 @@
     "test": "npm run build && mocha test/unit/",
     "build": "tsc",
     "build-dist": "tsc -p tsconfig.dist.json",
-    "docs": "typedoc --out docs/ --mode modules --readme ./README.md --tsconfig tsconfig.dist.json",
+    "docs": "typedoc --out docs/ --readme ./README.md --tsconfig tsconfig.dist.json",
     "clean-docs": "rm -rf docs/",
     "clean-dist": "rm -rf dist/"
   },
@@ -33,8 +33,7 @@
     "chai": "^4.1.1",
     "mocha": "^3.5.0",
     "typedoc": "^0.8.0",
-    "typescript": "^2.4.2",
-    "colisee-lib": "siggame/colisee-lib"
+    "typescript": "^2.4.2"
   },
   "dependencies": {
     "express": "^4.15.4",
