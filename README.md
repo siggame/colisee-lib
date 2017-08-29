@@ -19,7 +19,14 @@ A collection of JavaScript & TypeScript modules common between many colisee serv
 This is a collection of modules that will be common between many colisee services. This includes loggers, middlewares, databasse utilities, etc. The purpose of this repository is to be included directly in a package.json.
 
 ## Getting Started
+To save the repo to your package.json dependencies:
 ```
+npm install --save siggame/colisee#stable
+```
+
+Importing the code:
+```typescript
+import * as colisee-lib from "colissee-lib";
 ```
 
 ## API

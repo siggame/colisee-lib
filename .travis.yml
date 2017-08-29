@@ -4,10 +4,10 @@ services:
   - docker
 
 before_script:
-  - docker build --tag colisee-lib --file Dockerfile.dev .
+  - docker build --tag development --file Dockerfile.dev .
 
 script:
-  - docker run colisee-lib npm run test
+  - docker run development npm run test
 
 before_deploy:
   - docker run --rm development -v ${TRAVIS_BUILD_DIR}/docs:/prj/docs npm run docs
