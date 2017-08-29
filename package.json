@@ -8,7 +8,7 @@
     "test": "npm run build && mocha test/unit/",
     "build": "tsc",
     "build-dist": "tsc -p tsconfig.dist.json",
-    "docs": "typedoc --out docs/ --mode modules --readme ./README.md",
+    "docs": "typedoc --out docs/ --mode modules --readme ./README.md --tsconfig tsconfig.dist.json",
     "clean-docs": "rm -rf docs/",
     "clean-dist": "rm -rf dist/"
   },
