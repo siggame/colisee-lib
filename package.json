@@ -7,8 +7,10 @@
     "setup": "npm install",
     "test": "npm run build && mocha test/unit/",
     "build": "tsc",
-    "build-dist": "rm -rf dist/ && tsc -p tsconfig.dist.json",
-    "docs": "rm -rf docs/ && typedoc --out docs/ --mode modules --readme ./README.md"
+    "build-dist": "tsc -p tsconfig.dist.json",
+    "docs": "typedoc --out docs/ --mode modules --readme ./README.md",
+    "clean-docs": "rm -rf docs/",
+    "clean-dist": "rm -rf dist/"
   },
   "repository": {
     "type": "git",
