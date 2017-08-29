@@ -10,7 +10,7 @@ script:
   - docker run development npm run test
 
 before_deploy:
-  - docker run --rm development -v ${TRAVIS_BUILD_DIR}/docs:/prj/docs npm run docs
+  - docker run --rm -v ${TRAVIS_BUILD_DIR}/docs:/prj/docs development npm run docs
 
 deploy:
   provider: pages

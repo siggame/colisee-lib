@@ -5,11 +5,12 @@ A collection of JavaScript & TypeScript modules common between many colisee serv
 [![Travis](https://img.shields.io/travis/siggame/colisee-lib.svg?style=flat-square)](https://travis-ci.org/siggame/colisee-lib)
 [![Docker Pulls](https://img.shields.io/docker/pulls/colisee-lib/registre.svg?style=flat-square)](https://hub.docker.com/r/siggame/colisee-lib/)
 [![GitHub release](https://img.shields.io/github/release/siggame/colisee-lib.svg?style=flat-square)](https://github.com/siggame/colisee-lib/releases)
+[![Dependencies](https://img.shields.io/david/siggame/colisee-lib.svg?style=flat-square)](https://github.com/siggame/colisee-lib)
 
 ## Table Of Contents
 - [Description](#description)
 - [Getting Started](#getting-started)
-- [API](#api)
+- [Documentation](#documentation)
 - [License](https://github.com/siggame/colisee/blob/master/LICENSE.md)
 - [Contributors](#contributors)
 - [Contributing](https://github.com/siggame/colisee/blob/master/CONTRIBUTING.md)
@@ -29,9 +30,9 @@ Importing the code:
 import * as colisee-lib from "colissee-lib";
 ```
 
-## API
+## Documentation
 
-Show each major REST endpoint or module
+See the documentation [here]()
 
 ## Contributors
 - [Russley Shaw](https://github.com/russleyshaw)
