@@ -2,7 +2,7 @@
   "name": "colisee-lib",
   "version": "0.1.0",
   "description": "A collection of JavaScript & TypeScript modules common between many colisee services.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "npm run build && mocha test/unit/",
     "build": "tsc",
@@ -30,12 +30,15 @@
     "chai": "^4.1.1",
     "mocha": "^3.5.0",
     "typedoc": "^0.8.0",
-    "typescript": "^2.4.2"
+    "typescript": "^2.4.2",
+    "colisee-lib": "siggame/colisee-lib"
   },
   "dependencies": {
     "express": "^4.15.4",
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
+    "pg": "^7.2.0",
+    "sqlite3": "^3.1.9",
     "winston": "^2.3.1"
   }
 }

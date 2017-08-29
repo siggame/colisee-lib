@@ -1,10 +1,10 @@
-# siggame/YOUR_PROJECT_HERE
+# siggame/colisee-lib
 
-A brief description of the project.
+A collection of JavaScript & TypeScript modules common between many colisee services.
 
-[![Travis](https://img.shields.io/travis/siggame/YOUR_PROJECT_HERE.svg?style=flat-square)](https://travis-ci.org/siggame/YOUR_PROJECT_HERE)
-[![Docker Pulls](https://img.shields.io/docker/pulls/YOUR_PROJECT_HERE/registre.svg?style=flat-square)](https://hub.docker.com/r/siggame/YOUR_PROJECT_HERE/)
-[![GitHub release](https://img.shields.io/github/release/siggame/YOUR_PROJECT_HERE.svg?style=flat-square)](https://github.com/siggame/YOUR_PROJECT_HERE/releases)
+[![Travis](https://img.shields.io/travis/siggame/colisee-lib.svg?style=flat-square)](https://travis-ci.org/siggame/colisee-lib)
+[![Docker Pulls](https://img.shields.io/docker/pulls/colisee-lib/registre.svg?style=flat-square)](https://hub.docker.com/r/siggame/colisee-lib/)
+[![GitHub release](https://img.shields.io/github/release/siggame/colisee-lib.svg?style=flat-square)](https://github.com/siggame/colisee-lib/releases)
 
 ## Table Of Contents
 - [Description](#description)
@@ -16,28 +16,10 @@ A brief description of the project.
 
 ## Description
 
-A long description of the project.
+This is a collection of modules that will be common between many colisee services. This includes loggers, middlewares, databasse utilities, etc. The purpose of this repository is to be included directly in a package.json.
 
-## Getting Started IF_REST_SERVICE
-
-### Locally
+## Getting Started
 ```
-git clone CLONE_URL_HERE
-cd PROJECT
-npm run setup
-npm run build
-npm run start
-```
-
-### Docker
-```
-docker pull siggame/PROJECT
-docker run --detach siggame/PROJECT
-```
-
-## Getting Started IF_MODULE
-```
-// show basic examples here
 ```
 
 ## API
