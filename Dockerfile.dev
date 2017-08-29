@@ -6,3 +6,5 @@ WORKDIR prj
 
 RUN npm run setup
 RUN npm run build
+
+CMD ["echo", "Finished"]
