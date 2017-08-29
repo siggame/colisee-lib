@@ -1,0 +1,8 @@
+FROM node:latest
+LABEL maintainer="siggame@mst.edu"
+
+ADD . prj
+WORKDIR prj
+
+RUN npm run setup
+RUN npm run build

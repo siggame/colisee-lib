@@ -1,0 +1,21 @@
+sudo: required
+
+services:
+  - docker
+
+before_script:
+  - docker build --tag colisee-lib --file Dockerfile.dev .
+
+script:
+  - docker run colisee-lib npm run test
+
+before_deploy:
+  - docker run --rm development -v ${TRAVIS_BUILD_DIR}/docs:/prj/docs npm run docs
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: docs
+  on:
+    branch: stable
