@@ -4,6 +4,7 @@
   "description": "A collection of JavaScript & TypeScript modules common between many colisee services.",
   "main": "dist/index.js",
   "scripts": {
+    "setup": "npm install",
     "test": "npm run build && mocha test/unit/",
     "build": "tsc",
     "build-dist": "rm -rf dist/ && tsc -p tsconfig.dist.json",
