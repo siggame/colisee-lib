@@ -20,7 +20,7 @@ export const GAMES_TABLE = "games";
 export const GAME_SUBMISSIONS_TABLE = "games_submission"
 
 export const TEAM_SUBMISSIONS_STATUSES = [ "queued", "building", "finished", "failed" ];
-export const GAME_STATUSES = [ "queued", "playing", "finished" ];
+export const GAME_STATUSES = [ "queued", "playing", "finished", "failed" ];
 
 /**
  * Main Knex connection. Make queries though this using the Knex API.
