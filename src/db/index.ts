@@ -54,7 +54,7 @@ function buildProductionConnection(): Knex {
  * @param force - Allow function to initialize a production database
  */
 export async function initializeDatabase(force: boolean = false): Promise<void> {
-    if(IS_PRODUCTION) throw new Error("Cannot initialize database on production unless force=true.");
+    if(IS_PRODUCTION && !force) throw new Error("Cannot initialize database on production unless force=true.");
 
     // Drop All Tables
     const dropAll = [
