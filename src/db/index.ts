@@ -11,16 +11,16 @@ const DB_HOST: string = _.defaultTo<string>(process.env.DB_HOST, "localhost");
 const DB_PORT: string = _.defaultTo<string>(process.env.DB_PORT, "5432");
 const DB_USER: string = _.defaultTo<string>(process.env.DB_USER, "postgres");
 const DB_PASS: string = _.defaultTo<string>(process.env.DB_PASS, "postgres");
-const DB_NAME: string =  _.defaultTo<string>(process.env.DB_NAME, "postgres");
+const DB_NAME: string = _.defaultTo<string>(process.env.DB_NAME, "postgres");
 
 
 export const TEAMS_TABLE = "teams";
 export const SUBMISSIONS_TABLE = "submissions";
 export const GAMES_TABLE = "games";
-export const GAME_SUBMISSIONS_TABLE = "games_submission"
+export const GAMES_SUBMISSIONS_TABLE = "games_submissions"
 
-export const TEAM_SUBMISSIONS_STATUSES = [ "queued", "building", "finished", "failed" ];
-export const GAME_STATUSES = [ "queued", "playing", "finished", "failed" ];
+export const TEAM_SUBMISSIONS_STATUSES = ["queued", "building", "finished", "failed"];
+export const GAME_STATUSES = ["queued", "playing", "finished", "failed"];
 
 /**
  * Main Knex connection. Make queries though this using the Knex API.
@@ -53,92 +53,96 @@ function buildProductionConnection(): Knex {
  * Initializes the database with Colisee tables
  * @param force - Allow function to initialize a production database
  */
-export async function initializeDatabase(force: boolean = false): Promise<void> {
-    if(IS_PRODUCTION && !force) throw new Error("Cannot initialize database on production unless force=true.");
+export async function initializeDatabase(force: boolean = false): Promise<string> {
+    if (IS_PRODUCTION && !force) throw new Error("Cannot initialize database on production unless force=true.");
 
     // Drop All Tables
     const dropAll = [
         TEAMS_TABLE,
         SUBMISSIONS_TABLE,
         GAMES_TABLE,
-        GAME_SUBMISSIONS_TABLE
+        GAMES_SUBMISSIONS_TABLE
     ].map(table => connection.schema.dropTableIfExists(table));
     await Promise.all(dropAll);
 
     // Create All Tables
-    await connection.schema.createTable(TEAMS_TABLE, table => {
-        table.increments("id");
-        table.string("name", 64)
-            .notNullable()
-            .unique();
+    const tables = [
+        connection.schema.createTable(TEAMS_TABLE, table => {
+            table.increments("id");
+            table.string("name", 64)
+                .notNullable()
+                .unique();
 
-        table.string("contact_email", 64)
-            .notNullable()
-            .unique();
-        table.string("password", 256)
-            .notNullable();
-        table.boolean("is_eligible")
-            .notNullable();
+            table.string("contact_email", 64)
+                .notNullable()
+                .unique();
+            table.string("password", 256)
+                .notNullable();
+            table.boolean("is_eligible")
+                .notNullable();
 
-        table.timestamps(true, true);
-    });
+            table.timestamps(true, true);
+        }),
 
-    await connection.schema.createTable(SUBMISSIONS_TABLE, table => {
-        table.increments("id");
-        table.integer("team_id")
-            .unsigned()
-            .references(`${TEAMS_TABLE}.id`);
-            
-        table.integer("version").notNullable();
-        table.enu("status", TEAM_SUBMISSIONS_STATUSES).notNullable();
+        connection.schema.createTable(SUBMISSIONS_TABLE, table => {
+            table.increments("id");
+            table.integer("team_id")
+                .unsigned()
+                .references(`${TEAMS_TABLE}.id`);
 
-        table.string("submission_url");
-        table.string("log_url");
-        table.string("image_name")
-            .comment("The docker image of the submission contained on the Arena Docker Registry");
+            table.integer("version").notNullable();
+            table.enu("status", TEAM_SUBMISSIONS_STATUSES).notNullable();
 
-        table.timestamps(true, true);
+            table.string("submission_url");
+            table.string("log_url");
+            table.string("image_name")
+                .comment("The docker image of the submission contained on the Arena Docker Registry");
 
-        // Constraints
-        table.unique(["team_id", "version"]);
-    });
+            table.timestamps(true, true);
 
-    await connection.schema.createTable(GAMES_TABLE, table => {
-        table.increments("id");
-        table.enu("status", GAME_STATUSES);
+            // Constraints
+            table.unique(["team_id", "version"]);
+        }),
 
-        table.string("win_reason");
-        table.string("lose_reason");
-        table.integer("winner_id")
-            .unsigned()
-            .references(`${SUBMISSIONS_TABLE}.id`)
-            .comment("The id of the winning submission");
+        connection.schema.createTable(GAMES_TABLE, table => {
+            table.increments("id");
+            table.enu("status", GAME_STATUSES);
 
-        table.string("log_url")
-            .comment("Link to the game log.");
+            table.string("win_reason");
+            table.string("lose_reason");
+            table.integer("winner_id")
+                .unsigned()
+                .references(`${SUBMISSIONS_TABLE}.id`)
+                .comment("The id of the winning submission");
 
-        table.timestamps(true, true);
-    });
+            table.string("log_url")
+                .comment("Link to the game log.");
 
-    await connection.schema.createTable(GAME_SUBMISSIONS_TABLE, table => {
-        table.increments("id");
+            table.timestamps(true, true);
+        }),
 
-        table.integer("submission_id")
-            .unsigned()
-            .notNullable()
-            .references(`${SUBMISSIONS_TABLE}.id`)
-            .comment("The submission that is a player in the linked game.");
+        connection.schema.createTable(GAMES_SUBMISSIONS_TABLE, table => {
+            table.increments("id");
 
-        table.integer("game_id")
-            .unsigned()
-            .notNullable()
-            .references(`${GAMES_TABLE}.id`)
-            .comment("The game that is/was played by the linked player.");
+            table.integer("submission_id")
+                .unsigned()
+                .notNullable()
+                .references(`${SUBMISSIONS_TABLE}.id`)
+                .comment("The submission that is a player in the linked game.");
 
-        table.string("output_url")
-            .comment("Link to the output generated by the linked submission.");
+            table.integer("game_id")
+                .unsigned()
+                .notNullable()
+                .references(`${GAMES_TABLE}.id`)
+                .comment("The game that is/was played by the linked player.");
 
-        table.timestamps(true, true);
-    })
+            table.string("output_url")
+                .comment("Link to the output generated by the linked submission.");
+
+            table.timestamps(true, true);
+        })
+    ]
+
+    return tables.map(t => t.toString()).join(";");
 }
 
