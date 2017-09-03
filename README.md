@@ -12,7 +12,7 @@ A collection of JavaScript & TypeScript modules common between many colisee serv
 - [Getting Started](#getting-started)
 - [Usage](#usage)
 - [Contributors](#contributors)
-- [Changelog](#changelog)
+- [Change Log](#change-log)
 - [License](#license)
 - [Contributing](#contributing)
 
