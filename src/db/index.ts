@@ -143,13 +143,13 @@ export async function initializeDatabase(force: boolean = false): Promise<string
         }]
     ]
 
-    const sql_strings = [];
+    const sqlStrings = [];
     for (const [table, def] of tables) {
         const t = connection.schema.createTable(table, def);
-        sql_strings.push(t.toString());
+        sqlStrings.push(t.toString());
         await t;
     }
 
-    return sql_strings.join(";\n") + ";\n";
+    return sqlStrings.join(";\n") + ";\n";
 }
 
