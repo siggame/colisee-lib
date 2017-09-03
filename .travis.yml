@@ -8,14 +8,3 @@ before_script:
 
 script:
   - docker run development npm run test
-
-before_deploy:
-  - docker run --rm -v ${TRAVIS_BUILD_DIR}/docs:/prj/docs development npm run docs
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  local_dir: docs
-  on:
-    branch: stable

@@ -1,0 +1,15 @@
+src/
+test/
+node_modules/
+docs/
+.git/
+
+Dockerfile.dev
+
+tsconfig.json
+tsconfig.dist.json
+
+.npmignore
+
+.travis.yml
+.travis.yaml
