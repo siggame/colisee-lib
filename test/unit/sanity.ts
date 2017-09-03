@@ -8,5 +8,5 @@ describe("Sanity", function() {
     it("should not be insane", () => {
         expect(true).is.not.false;
         expect(false).is.not.true;
-    })
+    });
 });

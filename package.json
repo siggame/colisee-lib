@@ -13,7 +13,9 @@
     "clean": "npm run clean:src && npm run clean:test && npm run clean:misc",
     "clean:src": "rm -rf src/**/*.js src/*.js",
     "clean:test": "rm -rf test/**/*.js test/*.js",
-    "clean:misc": "rm -rf dist/ node_modules/"
+    "clean:misc": "rm -rf dist/ node_modules/",
+    "lint": "tslint --format verbose --project ./tsconfig.json",
+    "lint-fix": "tslint --fix --format verbose --project ./tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,7 @@
   },
   "homepage": "https://github.com/siggame/colisee-lib#readme",
   "devDependencies": {
+    "@siggame/colisee-tslint": "^1.0.3",
     "@types/chai": "^4.0.4",
     "@types/express": "^4.0.37",
     "@types/knex": "0.0.60",
@@ -35,6 +38,7 @@
     "@types/winston": "^2.3.5",
     "chai": "^4.1.1",
     "mocha": "^3.5.0",
+    "tslint": "^5.7.0",
     "typescript": "^2.4.2"
   },
   "dependencies": {

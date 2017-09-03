@@ -4,5 +4,5 @@ import * as middleware from "./middleware";
 import * as node_env from "./node_env";
 
 export {
-    db, logger, middleware, node_env
-}
+    db, logger, middleware, node_env,
+};

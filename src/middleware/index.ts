@@ -1,5 +1,4 @@
-import { Request, Response, NextFunction } from "express";
-import * as express from "express";
+import { NextFunction, Request, Response } from "express";
 
 import logger from "../logger";
 
