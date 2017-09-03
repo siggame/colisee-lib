@@ -12,6 +12,7 @@ A collection of JavaScript & TypeScript modules common between many colisee serv
 - [Getting Started](#getting-started)
 - [Usage](#usage)
 - [Contributors](#contributors)
+- [Changelog](#changelog)
 - [License](#license)
 - [Contributing](#contributing)
 
@@ -39,6 +40,10 @@ TODO
 - [user404d](https://github.com/user404d)
 - [Hannah Reinbolt](https://github.com/LoneGalaxy)
 - [Matthew Qualls](https://github.com/MatthewQualls)
+
+## Change Log
+
+View our [CHANGELOG.md](https://github.com/siggame/colisee-lib/blob/master/CHANGELOG.md)
 
 ## License
 
