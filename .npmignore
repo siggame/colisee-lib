@@ -4,10 +4,10 @@ node_modules/
 docs/
 .git/
 
-Dockerfile.dev
+Dockerfile.*
 
 tsconfig.json
-tsconfig.dist.json
+tsconfig.*.json
 
 .npmignore
 
