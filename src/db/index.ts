@@ -18,8 +18,11 @@ export const SUBMISSIONS_TABLE = "submissions";
 export const GAMES_TABLE = "games";
 export const GAMES_SUBMISSIONS_TABLE = "games_submissions";
 
-export const TEAM_SUBMISSIONS_STATUSES = ["queued", "building", "finished", "failed"];
+export const SUBMISSION_STATUSES = ["queued", "building", "finished", "failed"];
+export type SUBMISSION_STATUS_TYPE = "queued" | "building" | "finished" | "failed";
+
 export const GAME_STATUSES = ["queued", "playing", "finished", "failed"];
+export type GAME_STATUS_TYPE = "queued" | "playing" | "finished" | "failed";
 
 /**
  * Main Knex connection. Make queries though this using the Knex API.
@@ -76,7 +79,7 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
                 .references(`${TEAMS_TABLE}.id`);
 
             table.integer("version").notNullable();
-            table.enu("status", TEAM_SUBMISSIONS_STATUSES).notNullable();
+            table.enu("status", SUBMISSION_STATUSES).notNullable();
 
             table.string("submission_url");
             table.string("log_url");
@@ -91,7 +94,8 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
 
         [GAMES_TABLE, table => {
             table.increments("id");
-            table.enu("status", GAME_STATUSES);
+            table.enu("status", GAME_STATUSES)
+                .notNullable();
 
             table.string("win_reason");
             table.string("lose_reason");
@@ -140,4 +144,107 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
     }
 
     return `${sqlStrings.join(";\n")};\n`;
+}
+
+export interface Team {
+    id: number;
+    name: string;
+    contactEmail: string;
+    password: string;
+    isEligible: boolean;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToTeams(rows: any[]): Team[] {
+    return rows.map((row): Team => {
+        return {
+            contactEmail: row.contact_email,
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            isEligible: row.is_eligible,
+            name: row.name,
+            password: row.password,
+            updatedAt: new Date(row.updated_at),
+        };
+    });
+}
+
+export interface Submission {
+    id: number;
+    teamId: number;
+    version: number;
+    status: SUBMISSION_STATUS_TYPE;
+
+    submissionUrl: string | null;
+    logUrl: string | null;
+    imageName: string | null;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToSubmissions(rows: any[]): Submission[] {
+    return rows.map((row): Submission => {
+        return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            imageName: row.image_name,
+            logUrl: row.log_url,
+            status: row.status,
+            submissionUrl: row.submission_url,
+            teamId: row.team_id,
+            updatedAt: new Date(row.updated_at),
+            version: row.version,
+        };
+    });
+}
+
+export interface Game {
+    id: number;
+    status: GAME_STATUS_TYPE;
+    winReason: string | null;
+    loseReason: string | null;
+    winnerId: number | null;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToGames(rows: any[]): Game[] {
+    return rows.map((row): Game => {
+        return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            loseReason: row.lose_reason,
+            status: row.status,
+            updatedAt: new Date(row.updated_at),
+            winReason: row.win_reason,
+            winnerId: row.winner_id,
+        };
+    });
+}
+
+export interface GameSubmission {
+    id: number;
+    submissionId: number;
+    gameId: number;
+    outputUrl: string | null;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToGameSubmissions(rows: any[]): GameSubmission[] {
+    return rows.map((row): GameSubmission => {
+        return {
+            createdAt: new Date(row.created_at),
+            gameId: row.game_id,
+            id: row.id,
+            outputUrl: row.output_url,
+            submissionId: row.submission_id,
+            updatedAt: new Date(row.updated_at),
+        };
+    });
 }
