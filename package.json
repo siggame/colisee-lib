@@ -6,14 +6,14 @@
   "types": "dist/index",
   "scripts": {
     "setup": "npm install",
-    "test": "npm run build && mocha test/unit/",
+    "test": "npm run build && mocha test/unit test/integration",
     "build": "tsc",
     "build-watch": "tsc --watch",
     "build-dist": "tsc -p tsconfig.dist.json",
     "clean": "npm run clean:src && npm run clean:test && npm run clean:misc",
-    "clean:src": "rm -rf src/**/*.js src/*.js",
-    "clean:test": "rm -rf test/**/*.js test/*.js",
-    "clean:misc": "rm -rf dist/ node_modules/",
+    "clean:src": "rimraf src/**/*.js src/*.js",
+    "clean:test": "rimraf test/**/*.js test/*.js",
+    "clean:misc": "rimraf dist/ node_modules/",
     "lint": "tslint --format verbose --project ./tsconfig.json",
     "lint-fix": "tslint --fix --format verbose --project ./tsconfig.json"
   },
@@ -38,6 +38,7 @@
     "@types/winston": "^2.3.5",
     "chai": "^4.1.1",
     "mocha": "^3.5.0",
+    "rimraf": "^2.6.1",
     "tslint": "^5.7.0",
     "typescript": "^2.4.2"
   },

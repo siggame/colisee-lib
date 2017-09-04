@@ -5,7 +5,7 @@
 import * as Knex from "knex";
 import * as _ from "lodash";
 
-import { IS_DEVELOPMENT, IS_PRODUCTION } from "../node_env";
+import logger from "../logger";
 
 const DB_HOST: string = _.defaultTo<string>(process.env.DB_HOST, "localhost");
 const DB_PORT: string = _.defaultTo<string>(process.env.DB_PORT, "5432");
@@ -24,45 +24,31 @@ export const GAME_STATUSES = ["queued", "playing", "finished", "failed"];
 /**
  * Main Knex connection. Make queries though this using the Knex API.
  */
-export const connection = (IS_DEVELOPMENT ? buildDevelopmentConnection() : buildProductionConnection());
-
-function buildDevelopmentConnection(): Knex {
-    return Knex({
-        client: "sqlite3",
-        connection: {
-            filename: "./db.sqlite",
-        },
-    });
-}
-
-function buildProductionConnection(): Knex {
-    return Knex({
-        client: "postgresql",
-        connection: {
-            database: DB_NAME,
-            host: DB_HOST,
-            password: DB_PASS,
-            port: DB_PORT,
-            user: DB_USER,
-        },
-    });
-}
+export const connection = Knex({
+    client: "pg",
+    connection: {
+        database: DB_NAME,
+        host: DB_HOST,
+        password: DB_PASS,
+        port: DB_PORT,
+        user: DB_USER,
+    },
+});
 
 /**
  * Initializes the database with Colisee tables
+ * @param dryRun - Doesn't actually execute SQL if true.
  * @param force - Allow function to initialize a production database
  */
-export async function initializeDatabase(force: boolean = false): Promise<string> {
-    if (IS_PRODUCTION && !force) throw new Error("Cannot initialize database on production unless force=true.");
+export async function initializeDatabase(dryRun: boolean = true): Promise<string> {
 
-    // Drop All Tables
-    const dropAll = [
-        TEAMS_TABLE,
-        SUBMISSIONS_TABLE,
-        GAMES_TABLE,
-        GAMES_SUBMISSIONS_TABLE,
-    ].map(table => connection.schema.dropTableIfExists(table));
-    await Promise.all(dropAll);
+    const conn: Knex = (()=>{
+        if(dryRun) {
+            return Knex({client: "pg"});
+        } else {
+            return connection;
+        }
+    })();
 
     // Create All Tables
     const tables: [string, (def: Knex.TableBuilder) => any][] = [
@@ -144,9 +130,13 @@ export async function initializeDatabase(force: boolean = false): Promise<string
 
     const sqlStrings = [];
     for (const [table, def] of tables) {
-        const t = connection.schema.createTable(table, def);
+        const t = conn.schema.createTable(table, def);
         sqlStrings.push(t.toString());
-        await t;
+        try {
+            await t;
+        } catch(e) {
+            logger.warn(e);
+        }
     }
 
     return `${sqlStrings.join(";\n")};\n`;
