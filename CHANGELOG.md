@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased] - 2017-MM-DD
 
+## [0.2.5] - 2017-09-05
+### Added
+- Database table interfaces
+- Database row to interface mappings
+
 ## [0.2.4] - 2017-09-04
 ### Changed
 - Hotfix to move types into dependencies
