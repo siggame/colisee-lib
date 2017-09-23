@@ -39,6 +39,17 @@ export const connection = Knex({
 });
 
 /**
+ * toString function that outputs an object's contents when called implicitly.
+ */
+export function toString(thing){
+    var output = '';
+    for (var i in thing){
+        output = output + i + ':' + thing[i] + '/n';
+    }
+    return output;
+}
+
+/**
  * Initializes the database with Colisee tables
  * @param dryRun - Doesn't actually execute SQL if true.
  * @param force - Allow function to initialize a production database
