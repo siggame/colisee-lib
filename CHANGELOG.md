@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased] - 2017-MM-DD
 
+## [0.3.0] - 2017-09-30
+### Added
+- logUrl to Game interface
+
 ## [0.2.5] - 2017-09-05
 ### Added
 - Database table interfaces
