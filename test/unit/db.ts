@@ -3,17 +3,17 @@ import { expect } from "chai";
 
 import { db } from "../../src";
 
-describe("The db module", function() {
-    it("shall provide the ability to do a dry run", async() => {
+describe("The db module", function () {
+    it("shall provide the ability to do a dry run", async () => {
         const sql = db.initializeDatabase(true);
         expect(sql).to.exist;
     });
 
-    describe("rowsToTeams", function() {
-        it("should map 0 rows to 0 teams", async() => {
+    describe("rowsToTeams", function () {
+        it("should map 0 rows to 0 teams", async () => {
             expect(db.rowsToTeams([])).to.be.empty;
         });
-        it("should map N rows to N teams", async() => {
+        it("should map N rows to N teams", async () => {
             const rows = [
                 {
                     contact_email: "test@example.com",
@@ -39,25 +39,26 @@ describe("The db module", function() {
 
             expect(db.rowsToTeams(rows)).to.deep.equals(teams);
         });
-        it("should throw if missing element", async() => {
+        it("should throw if missing element", async () => {
             try {
                 await db.rowsToTeams([{ invalid: "error" }]);
                 chai.assert("Expected error");
-            } catch(e) {
+            } catch (e) {
                 expect(e).is.not.instanceOf(chai.AssertionError);
             }
         });
     });
 
-    describe("rowsToGames", function() {
-        it("should map 0 rows to 0 games", async() => {
+    describe("rowsToGames", function () {
+        it("should map 0 rows to 0 games", async () => {
             expect(db.rowsToGames([])).to.be.empty;
         });
-        it("should map N rows to N games", async() => {
+        it("should map N rows to N games", async () => {
             const rows = [
                 {
                     created_at: Date.now().toString(),
                     id: 4,
+                    log_url: null,
                     lose_reason: null,
                     status: db.GAME_STATUSES[0],
                     updated_at: Date.now().toString(),
@@ -69,6 +70,7 @@ describe("The db module", function() {
                 {
                     createdAt: new Date(rows[0].created_at),
                     id: rows[0].id,
+                    logUrl: rows[0].log_url,
                     loseReason: rows[0].lose_reason,
                     status: rows[0].status as db.GAME_STATUS_TYPE,
                     updatedAt: new Date(rows[0].updated_at),
@@ -79,21 +81,21 @@ describe("The db module", function() {
 
             expect(db.rowsToGames(rows)).to.deep.equals(games);
         });
-        it("should throw if missing element", async() => {
+        it("should throw if missing element", async () => {
             try {
                 await db.rowsToGames([{ invalid: "error" }]);
                 chai.assert("Expected error");
-            } catch(e) {
+            } catch (e) {
                 expect(e).is.not.instanceOf(chai.AssertionError);
             }
         });
     });
 
-    describe("rowsToGameSubmissions", function() {
-        it("should map 0 rows to 0 game submissions", async() => {
+    describe("rowsToGameSubmissions", function () {
+        it("should map 0 rows to 0 game submissions", async () => {
             expect(db.rowsToGameSubmissions([])).to.be.empty;
         });
-        it("should map N rows to N game submissions", async() => {
+        it("should map N rows to N game submissions", async () => {
             const rows = [
                 {
                     created_at: Date.now().toString(),
@@ -117,21 +119,21 @@ describe("The db module", function() {
 
             expect(db.rowsToGameSubmissions(rows)).to.deep.equals(games);
         });
-        it("should throw if missing element", async() => {
+        it("should throw if missing element", async () => {
             try {
                 await db.rowsToGameSubmissions([{ invalid: "error" }]);
                 chai.assert("Expected error");
-            } catch(e) {
+            } catch (e) {
                 expect(e).is.not.instanceOf(chai.AssertionError);
             }
         });
     });
 
-    describe("rowsToSubmissions", function() {
-        it("should map 0 rows to 0 submissions", async() => {
+    describe("rowsToSubmissions", function () {
+        it("should map 0 rows to 0 submissions", async () => {
             expect(db.rowsToSubmissions([])).to.be.empty;
         });
-        it("should map N rows to N game", async() => {
+        it("should map N rows to N game", async () => {
             const rows = [
                 {
                     created_at: Date.now().toString(),
@@ -161,11 +163,11 @@ describe("The db module", function() {
 
             expect(db.rowsToSubmissions(rows)).to.deep.equals(submissions);
         });
-        it("should throw if missing element", async() => {
+        it("should throw if missing element", async () => {
             try {
                 await db.rowsToSubmissions([{ invalid: "error" }]);
                 chai.assert("Expected error");
-            } catch(e) {
+            } catch (e) {
                 expect(e).is.not.instanceOf(chai.AssertionError);
             }
         });

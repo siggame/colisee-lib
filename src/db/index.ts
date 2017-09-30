@@ -41,13 +41,13 @@ export const connection = Knex({
 /**
  * toString function that outputs an object's contents when called implicitly.
  */
-export function toString(thing){
-    var output = '';
-    for (var i in thing){
-        output = output + i + ':' + thing[i] + '/n';
-    }
-    return output;
-}
+// export function toString<T>(thing: T) {
+//     let output = "";
+//     for (const i in thing) {
+//         output = output + i + ":" + thing[i] + "/n";
+//     }
+//     return output;
+// }
 
 /**
  * Initializes the database with Colisee tables
@@ -56,9 +56,9 @@ export function toString(thing){
  */
 export async function initializeDatabase(dryRun: boolean = true): Promise<string> {
 
-    const conn: Knex = (()=>{
-        if(dryRun) {
-            return Knex({client: "pg"});
+    const conn: Knex = (() => {
+        if (dryRun) {
+            return Knex({ client: "pg" });
         } else {
             return connection;
         }
@@ -149,7 +149,7 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
         sqlStrings.push(t.toString());
         try {
             await t;
-        } catch(e) {
+        } catch (e) {
             logger.warn(e);
         }
     }
@@ -229,12 +229,12 @@ export function rowsToGames(rows: any[]): Game[] {
         return {
             createdAt: new Date(row.created_at),
             id: row.id,
+            logUrl: row.log_url,
             loseReason: row.lose_reason,
             status: row.status,
             updatedAt: new Date(row.updated_at),
             winReason: row.win_reason,
             winnerId: row.winner_id,
-            logUrl: row.log_url
         };
     });
 }
