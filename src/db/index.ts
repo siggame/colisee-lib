@@ -39,14 +39,10 @@ export const connection = Knex({
 });
 
 /**
- * toString function that outputs an object's contents when called implicitly.
+ * toString function that outputs an object's contents when called.
  */
-export function toString(thing){
-    var output = '';
-    for (var i in thing){
-        output = output + i + ':' + thing[i] + '/n';
-    }
-    return output;
+export function toString(){  
+    return this.object.id;
 }
 
 /**
