@@ -218,6 +218,7 @@ export interface Game {
     winReason: string | null;
     loseReason: string | null;
     winnerId: number | null;
+    logUrl: string | null;
 
     createdAt: Date;
     updatedAt: Date;
@@ -233,6 +234,7 @@ export function rowsToGames(rows: any[]): Game[] {
             updatedAt: new Date(row.updated_at),
             winReason: row.win_reason,
             winnerId: row.winner_id,
+            logUrl: row.log_url
         };
     });
 }
