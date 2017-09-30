@@ -41,7 +41,7 @@ export const connection = Knex({
 /**
  * toString function that outputs an object's contents when called.
  */
-export function toString(){  
+export function toString2(){  
     return this.object.id;
 }
 
