@@ -17,22 +17,30 @@ describe("The db module", function () {
             const rows = [
                 {
                     contact_email: "test@example.com",
+                    contact_name: "test",
                     created_at: Date.now().toString(),
+                    hash_iterations: 0,
                     id: 4,
                     is_eligible: true,
                     name: "yoyo",
                     password: "password",
+                    role: "admin",
+                    salt: "somesalt",
                     updated_at: Date.now().toString(),
                 },
             ];
             const teams: db.Team[] = [
                 {
                     contactEmail: rows[0].contact_email,
+                    contactName: rows[0].contact_name,
                     createdAt: new Date(rows[0].created_at),
+                    hashIterations: rows[0].hash_iterations,
                     id: rows[0].id,
                     isEligible: rows[0].is_eligible,
                     name: rows[0].name,
                     password: rows[0].password,
+                    role: rows[0].role as db.TEAM_ROLE,
+                    salt: rows[0].salt,
                     updatedAt: new Date(rows[0].updated_at),
                 },
             ];
