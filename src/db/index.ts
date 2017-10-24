@@ -18,6 +18,9 @@ export const SUBMISSIONS_TABLE = "submissions";
 export const GAMES_TABLE = "games";
 export const GAMES_SUBMISSIONS_TABLE = "games_submissions";
 
+export const TEAM_ROLES = ["user", "admin"];
+export type TEAM_ROLE = "user" | "admin";
+
 export const SUBMISSION_STATUSES = ["queued", "building", "finished", "failed"];
 export type SUBMISSION_STATUS_TYPE = "queued" | "building" | "finished" | "failed";
 
@@ -75,9 +78,18 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
             table.string("contact_email", 64)
                 .notNullable()
                 .unique();
-            table.string("password", 256)
+            table.string("contact_name", 64)
+                .notNullable();
+            table.integer("hash_iterations")
+                .defaultTo(0)
                 .notNullable();
             table.boolean("is_eligible")
+                .notNullable();
+            table.string("password", 256)
+                .notNullable();
+            table.enu("role", TEAM_ROLES)
+                .notNullable();
+            table.string("salt", 256)
                 .notNullable();
 
             table.timestamps(true, true);
