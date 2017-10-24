@@ -173,7 +173,11 @@ export interface Team {
     id: number;
     name: string;
     contactEmail: string;
+    contactName: string;
+    hashIterations: number;
     password: string;
+    role: TEAM_ROLE;
+    salt: string;
     isEligible: boolean;
 
     createdAt: Date;
@@ -184,11 +188,15 @@ export function rowsToTeams(rows: any[]): Team[] {
     return rows.map((row): Team => {
         return {
             contactEmail: row.contact_email,
+            contactName: row.contact_name,
             createdAt: new Date(row.created_at),
+            hashIterations: row.hash_iterations,
             id: row.id,
             isEligible: row.is_eligible,
             name: row.name,
             password: row.password,
+            role: row.role,
+            salt: row.salt,
             updatedAt: new Date(row.updated_at),
         };
     });
