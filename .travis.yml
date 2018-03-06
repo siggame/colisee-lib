@@ -1,10 +1,20 @@
-sudo: required
-
-services:
-  - docker
+language: node_js
+node_js:
+    - node
 
 before_script:
-  - docker build --tag development --file Dockerfile.dev .
-
+    - npm install
 script:
-  - docker run development npm run test
+    - npm test
+
+before_deploy:
+    - npm install -g typedoc
+    - typedoc --tsconfig tsconfig.dist.json --mode modules --out docs src && touch docs/.nojekyll
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: docs/
+  github_token: $GH_TOKEN
+  on:
+    branch: master
