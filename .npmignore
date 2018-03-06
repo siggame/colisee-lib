@@ -4,12 +4,9 @@ node_modules/
 docs/
 .git/
 
-Dockerfile.*
-
 tsconfig.json
 tsconfig.*.json
 
 .npmignore
 
 .travis.yml
-.travis.yaml

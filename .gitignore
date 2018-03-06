@@ -1,11 +1,7 @@
 app.log
 
 node_modules/
-dist/
+lib/
 docs/
 
-src/**/*.js
-src/*.js
-
-test/**/*.js
-test/*.js
+*.js
