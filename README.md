@@ -8,6 +8,7 @@ A collection of JavaScript & TypeScript modules common between many colisee serv
 [![NPM Total Downloads](https://img.shields.io/npm/dt/@siggame/colisee-lib.svg?style=flat-square)](https://www.npmjs.com/package/@siggame/colisee-lib)
 
 ## Table Of Contents
+
 - [Description](#description)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
@@ -21,12 +22,15 @@ A collection of JavaScript & TypeScript modules common between many colisee serv
 This is a collection of modules that will be common between many colisee services. This includes loggers, middlewares, database utilities, etc.
 
 ## Getting Started
+
 To save the repo to your package.json dependencies:
-```
-npm install --save @siggame/colisee
+
+```sh
+> npm install --save @siggame/colisee
 ```
 
 Importing the code:
+
 ```typescript
 import * as coliseeLib from "@siggame/colissee-lib";
 ```
@@ -36,6 +40,7 @@ import * as coliseeLib from "@siggame/colissee-lib";
 TODO
 
 ## Contributors
+
 - [Russley Shaw](https://github.com/russleyshaw)
 - [user404d](https://github.com/user404d)
 - [Hannah Reinbolt](https://github.com/LoneGalaxy)
@@ -43,11 +48,11 @@ TODO
 
 ## Change Log
 
-View our [CHANGELOG.md](https://github.com/siggame/colisee-lib/blob/master/CHANGELOG.md)
+View our [CHANGELOG.md](CHANGELOG.md)
 
 ## License
 
-View our [LICENSE.md](https://github.com/siggame/colisee/blob/master/LICENSE.md)
+View our [LICENSE](https://github.com/siggame/colisee/blob/master/LICENSE)
 
 ## Contributing
 
