@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated documentation and documentation generation
 
-[v0.3.2]: https://github.com/siggame/colisee-lib/compare/v0.0.0...v0.3.2
+[v0.3.2]: https://github.com/siggame/colisee-lib/compare/v0.3.0...v0.3.2
 [//]: # (<end>)
 
 ## [0.3.0] - 2017-09-30

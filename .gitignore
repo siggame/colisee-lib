@@ -1,7 +1,6 @@
-app.log
-
 node_modules/
 lib/
 docs/
 
+*.log
 *.js

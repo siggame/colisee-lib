@@ -4,6 +4,8 @@ node_modules/
 docs/
 .git/
 
+*.log
+
 tsconfig.json
 tsconfig.*.json
 
