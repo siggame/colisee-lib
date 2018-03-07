@@ -14,12 +14,13 @@ const DB_PASS: string = _.defaultTo<string>(process.env.DB_PASS, "postgres");
 const DB_NAME: string = _.defaultTo<string>(process.env.DB_NAME, "postgres");
 
 export const TEAMS_TABLE = "teams";
+export const USERS_TABLE = "users";
 export const SUBMISSIONS_TABLE = "submissions";
 export const GAMES_TABLE = "games";
 export const GAMES_SUBMISSIONS_TABLE = "games_submissions";
 
-export const TEAM_ROLES = ["user", "admin"];
-export type TEAM_ROLE = "user" | "admin";
+export const USER_ROLES = ["user", "admin"];
+export type USER_ROLE = "user" | "admin";
 
 export const SUBMISSION_STATUSES = ["queued", "building", "finished", "failed"];
 export type SUBMISSION_STATUS_TYPE = "queued" | "building" | "finished" | "failed";
@@ -63,7 +64,25 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
             table.string("name", 64)
                 .notNullable()
                 .unique();
+            table.boolean("is_eligible")
+                .notNullable();
+            table.boolean("is_paid")
+                .notNullable();
+            table.boolean("is_closed")
+                .notNullable();
+            table.integer("team_captain_id")
+                .unsigned()
+                .notNullable()
+                .references(`${USERS_TABLE}.id`)
+                .comment("The id of the user who 'owns' the team");
+            table.timestamps(true, true);
+        }],
 
+        [USERS_TABLE, table => {
+            table.increments("id");
+            table.string("name", 64)
+                .notNullable()
+                .unique();
             table.string("contact_email", 64)
                 .notNullable()
                 .unique();
@@ -72,13 +91,16 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
             table.integer("hash_iterations")
                 .defaultTo(0)
                 .notNullable();
-            table.boolean("is_eligible")
-                .notNullable();
             table.string("password", 256)
                 .notNullable();
-            table.enu("role", TEAM_ROLES)
+            table.enu("role", USER_ROLES)
                 .notNullable();
             table.string("salt", 256)
+                .notNullable();
+            table.json("form_response");
+            table.string("bio", 1024);
+            table.binary("profile_pic");
+            table.boolean("active")
                 .notNullable();
 
             table.timestamps(true, true);
@@ -165,7 +187,7 @@ export interface Team {
     contactName: string;
     hashIterations: number;
     password: string;
-    role: TEAM_ROLE;
+    role: USER_ROLE;
     salt: string;
     isEligible: boolean;
 
