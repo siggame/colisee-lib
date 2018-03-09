@@ -183,13 +183,10 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
 export interface Team {
     id: number;
     name: string;
-    contactEmail: string;
-    contactName: string;
-    hashIterations: number;
-    password: string;
-    role: USER_ROLE;
-    salt: string;
     isEligible: boolean;
+    isPaid: boolean;
+    isClosed: boolean;
+    teamCaptainId: number;
 
     createdAt: Date;
     updatedAt: Date;
@@ -198,14 +195,50 @@ export interface Team {
 export function rowsToTeams(rows: any[]): Team[] {
     return rows.map((row): Team => {
         return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            isClosed: row.is_closed,
+            isEligible: row.is_eligible,
+            isPaid: row.is_paid,
+            name: row.name,
+            teamCaptainId: row.team_captain_id,
+            updatedAt: new Date(row.updated_at),
+        };
+    });
+}
+
+export interface User {
+    id: number;
+    name: string;
+    contactEmail: string;
+    contactName: string;
+    hashIterations: number;
+    password: string;
+    role: USER_ROLE;
+    salt: string;
+    formResponse: {};
+    active: boolean;
+    bio: string;
+    profilePic: string;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToUsers(rows: any[]): User[] {
+    return rows.map((row): User => {
+        return {
+            active: row.active,
+            bio: row.bio,
             contactEmail: row.contact_email,
             contactName: row.contact_name,
             createdAt: new Date(row.created_at),
+            formResponse: row.form_response,
             hashIterations: row.hash_iterations,
             id: row.id,
-            isEligible: row.is_eligible,
             name: row.name,
             password: row.password,
+            profilePic: row.profile_pic,
             role: row.role,
             salt: row.salt,
             updatedAt: new Date(row.updated_at),
