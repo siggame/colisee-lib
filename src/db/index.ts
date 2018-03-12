@@ -309,6 +309,29 @@ export function rowsToTeamsUsers(rows: any[]): TeamsUsers[] {
     });
 }
 
+export interface Invites {
+    id: number;
+    teamId: number;
+    userId: number;
+    isCompleted: boolean;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToInvites(rows: any[]): Invites[] {
+    return rows.map((row): Invites => {
+        return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            isCompleted: row.is_completed,
+            teamId: row.team_id,
+            updatedAt: new Date(row.updated_at),
+            userId: row.user_id,
+        };
+    });
+}
+
 export interface Submission {
     id: number;
     teamId: number;
