@@ -393,7 +393,7 @@ export function rowsToSubmissionsMetadata(rows: any[]): SubmissionsMetadata[] {
             createdAt: new Date(row.created_at),
             id: row.id,
             label: row.label,
-            label_color: row.label_color,
+            labelColor: row.label_color,
             submissionId: row.submission_id,
             updatedAt: new Date(row.updated_at),
         };
