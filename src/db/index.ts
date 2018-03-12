@@ -265,6 +265,28 @@ export function rowsToUsers(rows: any[]): User[] {
     });
 }
 
+export interface TeamsUsers {
+    id: number;
+    teamId: number;
+    userId: number;
+    outputUrl: string | null;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToTeamsUsers(rows: any[]): TeamsUsers[] {
+    return rows.map((row): TeamsUsers => {
+        return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            teamId: row.team_id,
+            updatedAt: new Date(row.updated_at),
+            userId: row.user_id,
+        };
+    });
+}
+
 export interface Submission {
     id: number;
     teamId: number;
