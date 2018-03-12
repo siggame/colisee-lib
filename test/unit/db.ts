@@ -148,6 +148,44 @@ export default function () {
             });
         });
 
+        describe("rowsToInvites", function () {
+            it("should map 0 rows to 0 invites", async () => {
+                expect(db.rowsToInvites([])).to.be.empty;
+            });
+            it("should map N rows to N invites", async () => {
+                const rows = [
+                    {
+                        created_at: Date.now().toString(),
+                        id: 4,
+                        is_completed: false,
+                        team_id: 0,
+                        updated_at: Date.now().toString(),
+                        user_id: 5,
+                    },
+                ];
+                const invites: db.Invites[] = [
+                    {
+                        createdAt: new Date(rows[0].created_at),
+                        id: rows[0].id,
+                        isCompleted: rows[0].is_completed,
+                        teamId: rows[0].team_id,
+                        updatedAt: new Date(rows[0].updated_at),
+                        userId: rows[0].user_id,
+                    },
+                ];
+
+                expect(db.rowsToInvites(rows)).to.deep.equals(invites);
+            });
+            it("should throw if missing element", async () => {
+                try {
+                    await db.rowsToInvites([{ invalid: "error" }]);
+                    chai.assert("Expected error");
+                } catch (e) {
+                    expect(e).is.not.instanceOf(chai.AssertionError);
+                }
+            });
+        });
+
         describe("rowsToGames", function () {
             it("should map 0 rows to 0 games", async () => {
                 expect(db.rowsToGames([])).to.be.empty;
