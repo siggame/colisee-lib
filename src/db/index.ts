@@ -18,6 +18,7 @@ export const USERS_TABLE = "users";
 export const TEAMS_USERS_TABLE = "teams_users";
 export const INVITES_TABLE = "invites";
 export const SUBMISSIONS_TABLE = "submissions";
+export const SUBMISSIONS_METADATA_TABLE = "submissions_metadata";
 export const GAMES_TABLE = "games";
 export const GAMES_SUBMISSIONS_TABLE = "games_submissions";
 
@@ -166,6 +167,20 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
 
             // Constraints
             table.unique(["team_id", "version"]);
+        }],
+
+        [SUBMISSIONS_METADATA_TABLE, table => {
+            table.increments("id");
+            table.integer("submissions_id")
+                .unsigned()
+                .references(`${SUBMISSIONS_TABLE}.id`);
+
+            table.string("label");
+            table.string("label_color");
+            table.timestamps(true, true);
+
+            // Constraints
+            table.unique(["submissions_id"]);
         }],
 
         [GAMES_TABLE, table => {
