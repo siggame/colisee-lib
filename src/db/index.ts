@@ -269,7 +269,6 @@ export interface TeamsUsers {
     id: number;
     teamId: number;
     userId: number;
-    outputUrl: string | null;
 
     createdAt: Date;
     updatedAt: Date;
