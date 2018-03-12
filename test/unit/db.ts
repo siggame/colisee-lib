@@ -55,10 +55,10 @@ export default function () {
         });
 
         describe("rowsToUsers", function () {
-            it("should map 0 rows to 0 teams", async () => {
+            it("should map 0 rows to 0 users", async () => {
                 expect(db.rowsToTeams([])).to.be.empty;
             });
-            it("should map N rows to N teams", async () => {
+            it("should map N rows to N users", async () => {
                 const rows = [
                     {
                         active: true,
