@@ -309,6 +309,44 @@ export default function () {
                 }
             });
         });
+
+        describe("rowsToSubmissionsMetadata", function () {
+            it("should map 0 rows to 0 submissions metadata", async () => {
+                expect(db.rowsToSubmissionsMetadata([])).to.be.empty;
+            });
+            it("should map N rows to N submissions metadata", async () => {
+                const rows = [
+                    {
+                        created_at: Date.now().toString(),
+                        id: 4,
+                        label: "working",
+                        label_color: "#FF013F",
+                        submission_id: 5,
+                        updated_at: Date.now().toString(),
+                    },
+                ];
+                const submissionsMetadata: db.SubmissionsMetadata[] = [
+                    {
+                        createdAt: new Date(rows[0].created_at),
+                        id: rows[0].id,
+                        label: rows[0].label,
+                        labelColor: rows[0].label_color,
+                        submissionId: rows[0].submission_id,
+                        updatedAt: new Date(rows[0].updated_at),
+                    },
+                ];
+
+                expect(db.rowsToSubmissionsMetadata(rows)).to.deep.equals(submissionsMetadata);
+            });
+            it("should throw if missing element", async () => {
+                try {
+                    await db.rowsToSubmissionsMetadata([{ invalid: "error" }]);
+                    chai.assert("Expected error");
+                } catch (e) {
+                    expect(e).is.not.instanceOf(chai.AssertionError);
+                }
+            });
+        });
     });
 
 }
