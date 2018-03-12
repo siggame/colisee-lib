@@ -377,6 +377,29 @@ export function rowsToSubmissions(rows: any[]): Submission[] {
     });
 }
 
+export interface SubmissionsMetadata {
+    id: number;
+    submissionId: number;
+    label: string;
+    labelColor: string;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToSubmissionsMetadata(rows: any[]): SubmissionsMetadata[] {
+    return rows.map((row): SubmissionsMetadata => {
+        return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            label: row.label,
+            label_color: row.label_color,
+            submissionId: row.submission_id,
+            updatedAt: new Date(row.updated_at),
+        };
+    });
+}
+
 export interface Game {
     id: number;
     status: GAME_STATUS_TYPE;
