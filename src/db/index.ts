@@ -15,6 +15,7 @@ const DB_NAME: string = _.defaultTo<string>(process.env.DB_NAME, "postgres");
 
 export const TEAMS_TABLE = "teams";
 export const USERS_TABLE = "users";
+export const TEAMS_USERS_TABLE = "teams_users";
 export const SUBMISSIONS_TABLE = "submissions";
 export const GAMES_TABLE = "games";
 export const GAMES_SUBMISSIONS_TABLE = "games_submissions";
@@ -102,6 +103,24 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
             table.binary("profile_pic");
             table.boolean("active")
                 .notNullable();
+
+            table.timestamps(true, true);
+        }],
+
+        [TEAMS_USERS_TABLE, table => {
+            table.increments("id");
+
+            table.integer("user_id")
+                .unsigned()
+                .notNullable()
+                .references(`${USERS_TABLE}.id`)
+                .comment("The user that is on the team");
+
+            table.integer("team_id")
+                .unsigned()
+                .notNullable()
+                .references(`${TEAMS_TABLE}.id`)
+                .comment("The team that the user is on");
 
             table.timestamps(true, true);
         }],
