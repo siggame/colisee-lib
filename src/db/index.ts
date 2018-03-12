@@ -115,6 +115,7 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
             table.integer("user_id")
                 .unsigned()
                 .notNullable()
+                .unique()
                 .references(`${USERS_TABLE}.id`)
                 .comment("The user that is on the team");
 
@@ -172,6 +173,7 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
         [SUBMISSIONS_METADATA_TABLE, table => {
             table.increments("id");
             table.integer("submissions_id")
+                .unique()
                 .unsigned()
                 .references(`${SUBMISSIONS_TABLE}.id`);
 
@@ -179,8 +181,6 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
             table.string("label_color");
             table.timestamps(true, true);
 
-            // Constraints
-            table.unique(["submissions_id"]);
         }],
 
         [GAMES_TABLE, table => {
