@@ -2,6 +2,7 @@ import * as chai from "chai";
 import { expect } from "chai";
 
 import { db } from "../../src";
+import {USER_ROLE, USER_ROLES} from "../../src/db/index";
 
 export default function () {
 
@@ -18,31 +19,25 @@ export default function () {
             it("should map N rows to N teams", async () => {
                 const rows = [
                     {
-                        contact_email: "test@example.com",
-                        contact_name: "test",
                         created_at: Date.now().toString(),
-                        hash_iterations: 0,
                         id: 4,
+                        is_closed: false,
                         is_eligible: true,
-                        name: "yoyo",
-                        password: "password",
-                        role: "admin",
-                        salt: "somesalt",
+                        is_paid: true,
+                        name: "testName",
+                        team_captain_id: 1,
                         updated_at: Date.now().toString(),
                     },
                 ];
                 const teams: db.Team[] = [
                     {
-                        contactEmail: rows[0].contact_email,
-                        contactName: rows[0].contact_name,
                         createdAt: new Date(rows[0].created_at),
-                        hashIterations: rows[0].hash_iterations,
                         id: rows[0].id,
+                        isClosed: rows[0].is_closed,
                         isEligible: rows[0].is_eligible,
+                        isPaid: rows[0].is_paid,
                         name: rows[0].name,
-                        password: rows[0].password,
-                        role: rows[0].role as db.TEAM_ROLE,
-                        salt: rows[0].salt,
+                        teamCaptainId: rows[0].team_captain_id,
                         updatedAt: new Date(rows[0].updated_at),
                     },
                 ];
@@ -52,6 +47,138 @@ export default function () {
             it("should throw if missing element", async () => {
                 try {
                     await db.rowsToTeams([{ invalid: "error" }]);
+                    chai.assert("Expected error");
+                } catch (e) {
+                    expect(e).is.not.instanceOf(chai.AssertionError);
+                }
+            });
+        });
+
+        describe("rowsToUsers", function () {
+            it("should map 0 rows to 0 users", async () => {
+                expect(db.rowsToTeams([])).to.be.empty;
+            });
+            it("should map N rows to N users", async () => {
+                const rows = [
+                    {
+                        active: true,
+                        bio: "here is my bio",
+                        contact_email: "test@test.com",
+                        contact_name: "testName",
+                        created_at: Date.now().toString(),
+                        form_response : {
+                            question1: "answer",
+                            question2: "answer2",
+                        },
+                        hash_iterations: 5000,
+                        id: 4,
+                        name: "testName",
+                        password: "testPassword",
+                        profile_pic: "Not sure how to represent a picture",
+                        role: USER_ROLES[0],
+                        salt: "testSalt",
+                        updated_at: Date.now().toString(),
+                    },
+                ];
+                const users: db.User[] = [
+                    {
+                        active: rows[0].active,
+                        bio: rows[0].bio,
+                        contactEmail: rows[0].contact_email,
+                        contactName: rows[0].contact_name,
+                        createdAt: new Date(rows[0].created_at),
+                        formResponse: rows[0].form_response,
+                        hashIterations: rows[0].hash_iterations,
+                        id: rows[0].id,
+                        name: rows[0].contact_name,
+                        password: rows[0].password,
+                        profilePic: rows[0].profile_pic,
+                        role: rows[0].role as USER_ROLE,
+                        salt: rows[0].salt,
+
+                        updatedAt: new Date(rows[0].updated_at),
+                    },
+                ];
+
+                expect(db.rowsToUsers(rows)).to.deep.equals(users);
+            });
+            it("should throw if missing element", async () => {
+                try {
+                    await db.rowsToUsers([{ invalid: "error" }]);
+                    chai.assert("Expected error");
+                } catch (e) {
+                    expect(e).is.not.instanceOf(chai.AssertionError);
+                }
+            });
+        });
+
+        describe("rowsToUsersTeams", function () {
+            it("should map 0 rows to 0 users teams", async () => {
+                expect(db.rowsToTeamsUsers([])).to.be.empty;
+            });
+            it("should map N rows to N users teams", async () => {
+                const rows = [
+                    {
+                        created_at: Date.now().toString(),
+                        id: 4,
+                        team_id: 0,
+                        updated_at: Date.now().toString(),
+                        user_id: 5,
+                    },
+                ];
+                const teamsUsers: db.TeamsUsers[] = [
+                    {
+                        createdAt: new Date(rows[0].created_at),
+                        id: rows[0].id,
+                        teamId: rows[0].team_id,
+                        updatedAt: new Date(rows[0].updated_at),
+                        userId: rows[0].user_id,
+                    },
+                ];
+
+                expect(db.rowsToTeamsUsers(rows)).to.deep.equals(teamsUsers);
+            });
+            it("should throw if missing element", async () => {
+                try {
+                    await db.rowsToTeamsUsers([{ invalid: "error" }]);
+                    chai.assert("Expected error");
+                } catch (e) {
+                    expect(e).is.not.instanceOf(chai.AssertionError);
+                }
+            });
+        });
+
+        describe("rowsToInvites", function () {
+            it("should map 0 rows to 0 invites", async () => {
+                expect(db.rowsToInvites([])).to.be.empty;
+            });
+            it("should map N rows to N invites", async () => {
+                const rows = [
+                    {
+                        created_at: Date.now().toString(),
+                        id: 4,
+                        is_completed: false,
+                        team_id: 0,
+                        updated_at: Date.now().toString(),
+                        user_id: 5,
+                    },
+                ];
+                const invites: db.Invites[] = [
+                    {
+                        createdAt: new Date(rows[0].created_at),
+                        id: rows[0].id,
+                        isCompleted: rows[0].is_completed,
+                        teamId: rows[0].team_id,
+                        updatedAt: new Date(rows[0].updated_at),
+                        userId: rows[0].user_id,
+                    },
+                ];
+
+                expect(db.rowsToInvites(rows)).to.deep.equals(invites);
+            });
+            it("should throw if missing element", async () => {
+                try {
+                    await db.rowsToInvites([{ invalid: "error" }]);
                     chai.assert("Expected error");
                 } catch (e) {
                     expect(e).is.not.instanceOf(chai.AssertionError);
@@ -176,6 +303,44 @@ export default function () {
             it("should throw if missing element", async () => {
                 try {
                     await db.rowsToSubmissions([{ invalid: "error" }]);
+                    chai.assert("Expected error");
+                } catch (e) {
+                    expect(e).is.not.instanceOf(chai.AssertionError);
+                }
+            });
+        });
+
+        describe("rowsToSubmissionsMetadata", function () {
+            it("should map 0 rows to 0 submissions metadata", async () => {
+                expect(db.rowsToSubmissionsMetadata([])).to.be.empty;
+            });
+            it("should map N rows to N submissions metadata", async () => {
+                const rows = [
+                    {
+                        created_at: Date.now().toString(),
+                        id: 4,
+                        label: "working",
+                        label_color: "#FF013F",
+                        submission_id: 5,
+                        updated_at: Date.now().toString(),
+                    },
+                ];
+                const submissionsMetadata: db.SubmissionsMetadata[] = [
+                    {
+                        createdAt: new Date(rows[0].created_at),
+                        id: rows[0].id,
+                        label: rows[0].label,
+                        labelColor: rows[0].label_color,
+                        submissionId: rows[0].submission_id,
+                        updatedAt: new Date(rows[0].updated_at),
+                    },
+                ];
+
+                expect(db.rowsToSubmissionsMetadata(rows)).to.deep.equals(submissionsMetadata);
+            });
+            it("should throw if missing element", async () => {
+                try {
+                    await db.rowsToSubmissionsMetadata([{ invalid: "error" }]);
                     chai.assert("Expected error");
                 } catch (e) {
                     expect(e).is.not.instanceOf(chai.AssertionError);

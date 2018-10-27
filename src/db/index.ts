@@ -14,12 +14,16 @@ const DB_PASS: string = _.defaultTo<string>(process.env.DB_PASS, "postgres");
 const DB_NAME: string = _.defaultTo<string>(process.env.DB_NAME, "postgres");
 
 export const TEAMS_TABLE = "teams";
+export const USERS_TABLE = "users";
+export const TEAMS_USERS_TABLE = "teams_users";
+export const INVITES_TABLE = "invites";
 export const SUBMISSIONS_TABLE = "submissions";
+export const SUBMISSIONS_METADATA_TABLE = "submissions_metadata";
 export const GAMES_TABLE = "games";
 export const GAMES_SUBMISSIONS_TABLE = "games_submissions";
 
-export const TEAM_ROLES = ["user", "admin"];
-export type TEAM_ROLE = "user" | "admin";
+export const USER_ROLES = ["user", "admin"];
+export type USER_ROLE = "user" | "admin";
 
 export const SUBMISSION_STATUSES = ["queued", "building", "finished", "failed"];
 export type SUBMISSION_STATUS_TYPE = "queued" | "building" | "finished" | "failed";
@@ -63,7 +67,25 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
             table.string("name", 64)
                 .notNullable()
                 .unique();
+            table.boolean("is_eligible")
+                .notNullable();
+            table.boolean("is_paid")
+                .notNullable();
+            table.boolean("is_closed")
+                .notNullable();
+            table.integer("team_captain_id")
+                .unsigned()
+                .notNullable()
+                .references(`${USERS_TABLE}.id`)
+                .comment("The id of the user who 'owns' the team");
+            table.timestamps(true, true);
+        }],
 
+        [USERS_TABLE, table => {
+            table.increments("id");
+            table.string("name", 64)
+                .notNullable()
+                .unique();
             table.string("contact_email", 64)
                 .notNullable()
                 .unique();
@@ -72,14 +94,58 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
             table.integer("hash_iterations")
                 .defaultTo(0)
                 .notNullable();
-            table.boolean("is_eligible")
-                .notNullable();
             table.string("password", 256)
                 .notNullable();
-            table.enu("role", TEAM_ROLES)
+            table.enu("role", USER_ROLES)
                 .notNullable();
             table.string("salt", 256)
                 .notNullable();
+            table.json("form_response");
+            table.string("bio", 1024);
+            table.binary("profile_pic");
+            table.boolean("active")
+                .notNullable();
+
+            table.timestamps(true, true);
+        }],
+
+        [TEAMS_USERS_TABLE, table => {
+            table.increments("id");
+
+            table.integer("user_id")
+                .unsigned()
+                .notNullable()
+                .unique()
+                .references(`${USERS_TABLE}.id`)
+                .comment("The user that is on the team");
+
+            table.integer("team_id")
+                .unsigned()
+                .notNullable()
+                .references(`${TEAMS_TABLE}.id`)
+                .comment("The team that the user is on");
+
+            table.timestamps(true, true);
+        }],
+
+        [INVITES_TABLE, table => {
+            table.increments("id");
+
+            table.integer("user_id")
+                .unsigned()
+                .notNullable()
+                .references(`${USERS_TABLE}.id`)
+                .comment("The user that is on the team");
+
+            table.integer("team_id")
+                .unsigned()
+                .notNullable()
+                .references(`${TEAMS_TABLE}.id`)
+                .comment("The team that the user is on");
+
+            table.boolean("is_completed")
+                .notNullable()
+                .defaultTo(false);
 
             table.timestamps(true, true);
         }],
@@ -102,6 +168,19 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
 
             // Constraints
             table.unique(["team_id", "version"]);
+        }],
+
+        [SUBMISSIONS_METADATA_TABLE, table => {
+            table.increments("id");
+            table.integer("submissions_id")
+                .unique()
+                .unsigned()
+                .references(`${SUBMISSIONS_TABLE}.id`);
+
+            table.string("label");
+            table.string("label_color");
+            table.timestamps(true, true);
+
         }],
 
         [GAMES_TABLE, table => {
@@ -161,13 +240,10 @@ export async function initializeDatabase(dryRun: boolean = true): Promise<string
 export interface Team {
     id: number;
     name: string;
-    contactEmail: string;
-    contactName: string;
-    hashIterations: number;
-    password: string;
-    role: TEAM_ROLE;
-    salt: string;
     isEligible: boolean;
+    isPaid: boolean;
+    isClosed: boolean;
+    teamCaptainId: number;
 
     createdAt: Date;
     updatedAt: Date;
@@ -176,17 +252,97 @@ export interface Team {
 export function rowsToTeams(rows: any[]): Team[] {
     return rows.map((row): Team => {
         return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            isClosed: row.is_closed,
+            isEligible: row.is_eligible,
+            isPaid: row.is_paid,
+            name: row.name,
+            teamCaptainId: row.team_captain_id,
+            updatedAt: new Date(row.updated_at),
+        };
+    });
+}
+
+export interface User {
+    id: number;
+    name: string;
+    contactEmail: string;
+    contactName: string;
+    hashIterations: number;
+    password: string;
+    role: USER_ROLE;
+    salt: string;
+    formResponse: {};
+    active: boolean;
+    bio: string;
+    profilePic: string;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToUsers(rows: any[]): User[] {
+    return rows.map((row): User => {
+        return {
+            active: row.active,
+            bio: row.bio,
             contactEmail: row.contact_email,
             contactName: row.contact_name,
             createdAt: new Date(row.created_at),
+            formResponse: row.form_response,
             hashIterations: row.hash_iterations,
             id: row.id,
-            isEligible: row.is_eligible,
             name: row.name,
             password: row.password,
+            profilePic: row.profile_pic,
             role: row.role,
             salt: row.salt,
             updatedAt: new Date(row.updated_at),
+        };
+    });
+}
+
+export interface TeamsUsers {
+    id: number;
+    teamId: number;
+    userId: number;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToTeamsUsers(rows: any[]): TeamsUsers[] {
+    return rows.map((row): TeamsUsers => {
+        return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            teamId: row.team_id,
+            updatedAt: new Date(row.updated_at),
+            userId: row.user_id,
+        };
+    });
+}
+
+export interface Invites {
+    id: number;
+    teamId: number;
+    userId: number;
+    isCompleted: boolean;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToInvites(rows: any[]): Invites[] {
+    return rows.map((row): Invites => {
+        return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            isCompleted: row.is_completed,
+            teamId: row.team_id,
+            updatedAt: new Date(row.updated_at),
+            userId: row.user_id,
         };
     });
 }
@@ -217,6 +373,29 @@ export function rowsToSubmissions(rows: any[]): Submission[] {
             teamId: row.team_id,
             updatedAt: new Date(row.updated_at),
             version: row.version,
+        };
+    });
+}
+
+export interface SubmissionsMetadata {
+    id: number;
+    submissionId: number;
+    label: string;
+    labelColor: string;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export function rowsToSubmissionsMetadata(rows: any[]): SubmissionsMetadata[] {
+    return rows.map((row): SubmissionsMetadata => {
+        return {
+            createdAt: new Date(row.created_at),
+            id: row.id,
+            label: row.label,
+            labelColor: row.label_color,
+            submissionId: row.submission_id,
+            updatedAt: new Date(row.updated_at),
         };
     });
 }
